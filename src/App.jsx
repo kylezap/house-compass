@@ -27,16 +27,15 @@
         <>
           <h1 id='title'>House Compass</h1>
           <p>
-            House Compass is a web application that helps you find the perfect house
-            for you. You can search for houses based on your preferences and budget.
-            You can also view the details of each house and contact the owner for more
-            information.
+            House Compass is a web application that helps you find the direction a home is facing.
           </p>
-          
-          <input type="text" />
-          <button id="search">Search</button>
+          <form action="submit">
+            <label htmlFor="address">Enter an address:</label>
+            <input type="text" id="address" />
+            <button id="submit">Submit/Reset</button>
+          </form>
           <div id="pano"></div>
-          <h2>The current direction is: {direction}</h2>
+          <h2 id='direction'>The current direction is: {direction}</h2>
         </>
       );
     }
