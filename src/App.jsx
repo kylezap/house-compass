@@ -54,6 +54,7 @@ function App() {
   const [direction, setDirection] = useState("");
   const [facing, setFacing] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [address, setAddress] = useState("");
 
   const apiKey = import.meta.env.VITE_API_KEY;
 
@@ -69,7 +70,8 @@ function App() {
   }, []);
 
   const handleButtonClick = async () => {
-    const address = document.getElementById("address").value;
+    const addressInput = document.getElementById("address");
+    const address = addressInput.value;
 
     const onHeadingChange = (heading) => {
       const compassDirection = getCompassDirection(heading);
@@ -83,8 +85,11 @@ function App() {
     const initialFacingDirection = getFacingDirection(initialHeading);
     setDirection(initialCompassDirection);
     setFacing(initialFacingDirection);
+    setAddress(address)
 
     setIsSubmitted(true);
+
+    addressInput.value = '';
   };
 
   return (
@@ -101,6 +106,7 @@ function App() {
 
       {isSubmitted && (
         <>
+        <h2>{address}</h2>
         <h2 id="direction">The current direction is: {direction}</h2>
         <h2 id="direction">The home faces: {facing}</h2>
         </>
