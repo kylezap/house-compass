@@ -53,6 +53,7 @@ import { initMap, getCompassDirection, getFacingDirection } from "./assets/initM
 function App() {
   const [direction, setDirection] = useState("");
   const [facing, setFacing] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const apiKey = import.meta.env.VITE_API_KEY;
 
@@ -82,6 +83,8 @@ function App() {
     const initialFacingDirection = getFacingDirection(initialHeading);
     setDirection(initialCompassDirection);
     setFacing(initialFacingDirection);
+
+    setIsSubmitted(true);
   };
 
   return (
@@ -95,9 +98,13 @@ function App() {
       <button id="submit" onClick={handleButtonClick}>
         Submit/Reset
       </button>
-      <h2 id="direction">The current direction is: {direction}</h2>
-      <h2 id="direction">The home faces: {facing}</h2>
 
+      {isSubmitted && (
+        <>
+        <h2 id="direction">The current direction is: {direction}</h2>
+        <h2 id="direction">The home faces: {facing}</h2>
+        </>
+      )}
       <div id="pano"></div>
       
     </>
