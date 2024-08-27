@@ -1,71 +1,59 @@
-import { useState, useEffect } from "react";
-import "./App.css";
-import loadGoogleMapsAPI from "./assets/loadGoogleMapsAPI";
-import { initMap, getCompassDirection, getFacingDirection } from "./assets/initMap";
+import React, { useState } from 'react';
+import MapComponent from './components/MapComponent';
+import { LoadScript } from '@react-google-maps/api';
+import './App.css';
 
 function App() {
-  const [direction, setDirection] = useState("");
-  const [facing, setFacing] = useState("");
+  const [direction, setDirection] = useState('');
+  const [facing, setFacing] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const apiKey = import.meta.env.VITE_API_KEY;
 
-  useEffect(() => {
-    async function fetchHeading() {
-      await loadGoogleMapsAPI({
-        key: apiKey,
-        v: "weekly",
-      });
-    }
-
-    fetchHeading();
-  }, []);
-
-  const handleButtonClick = async () => {
-    const addressInput = document.getElementById("address");
+  const handleButtonClick = () => {
+    const addressInput = document.getElementById('address');
     const address = addressInput.value;
-
-    const onHeadingChange = (heading) => {
-      const compassDirection = getCompassDirection(heading);
-      const facingDirection = getFacingDirection(heading);
-      setDirection(compassDirection);
-      setFacing(facingDirection);
-    };
-
-    const initialHeading = await initMap(address, onHeadingChange);
-    const initialCompassDirection = getCompassDirection(initialHeading);
-    const initialFacingDirection = getFacingDirection(initialHeading);
-    setDirection(initialCompassDirection);
-    setFacing(initialFacingDirection);
-    setAddress(address)
-
+    setAddress(address);
     setIsSubmitted(true);
-
+    setSuccessMessage('Address submitted successfully!');
     addressInput.value = '';
+  };
+
+  const handleHeadingChange = (heading) => {
+    const direction = getCompassDirection(heading);
+    setDirection(direction);
+    setFacing(direction);
+  };
+
+  const getCompassDirection = (heading) => {
+    if (heading >= 0 && heading < 45) return 'North';
+    if (heading >= 45 && heading < 135) return 'East';
+    if (heading >= 135 && heading < 225) return 'South';
+    if (heading >= 225 && heading < 315) return 'West';
+    return 'North';
   };
 
   return (
     <>
-      <h1 id="title">House Compass</h1>
-      <p>
-        House Compass is a web application that helps you find the direction a
-        home is facing.
-      </p>
-      <input type="text" id="address" placeholder="Enter an address" />
-      <button id="submit" onClick={handleButtonClick}>
-        Submit/Reset
-      </button>
+      <LoadScript googleMapsApiKey={apiKey}>
+        <h1 id="title">House Compass</h1>
+        <p>House Compass is a web application that helps you find the direction a home is facing.</p>
+        <input type="text" id="address" placeholder="Enter an address" />
+        <button id="submit" onClick={handleButtonClick}>
+          Submit/Reset
+        </button>
 
-      {isSubmitted && (
-        <>
-        <h2>{address}</h2>
-        <h2 id="direction">The current direction is: {direction}</h2>
-        <h2 id="direction">The home faces: {facing}</h2>
-        </>
-      )}
-      <div id="pano"></div>
-      
+        {isSubmitted && (
+          <>
+            <h2 id="direction">The current direction is: {direction}</h2>
+            <h2 id="facing">The home faces: {facing}</h2>
+            <p className="success-message">{successMessage}</p>
+            <MapComponent address={address} onHeadingChange={handleHeadingChange} />
+          </>
+        )}
+      </LoadScript>
     </>
   );
 }
