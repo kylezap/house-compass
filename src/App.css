@@ -46,11 +46,11 @@
 }
 
 #title {
-  text-align: center;
+  font-size: 3em
 }
 
 h2 {
-  text-align: center;
+  font-size: 2em;
 }
 
 #map {
@@ -58,3 +58,32 @@ h2 {
   height: 400px;
 }
 
+#submit {
+  margin-top: 1em;
+  border: 1px solid #ccc;
+  padding: 0.5em 1em;
+  border-radius: 0.25em;
+}
+
+#submit:hover {
+  background-color: #f8f8f8;
+}
+
+#submit:active {
+  background-color: #f0f0f0;
+}
+
+#address {
+  width: 100%;
+  padding: 0.5em;
+  margin-top: 1em;
+  border: 1px solid #ccc;
+  border-radius: 0.25em;
+}
+
+.success-message {
+  color: green;
+  margin-top: 1em;
+  /* display for 1 second */
+  animation: fadeOut 1s forwards;
+}
