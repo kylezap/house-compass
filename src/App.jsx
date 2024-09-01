@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MapComponent from './components/MapComponent';
 import { LoadScript } from '@react-google-maps/api';
 import './App.css';
@@ -12,6 +12,7 @@ function App() {
 
   const apiKey = import.meta.env.VITE_API_KEY;
 
+  // Function to handle the button click
   const handleButtonClick = () => {
     const addressInput = document.getElementById('address');
     const address = addressInput.value;
@@ -21,26 +22,69 @@ function App() {
     addressInput.value = '';
   };
 
+  // Function to handle the heading change
   const handleHeadingChange = (heading) => {
     const direction = getCompassDirection(heading);
+    const facing = getFacingDirection(heading);
     setDirection(direction);
-    setFacing(direction);
+    setFacing(facing);
   };
 
+  // Function to get the compass direction
   const getCompassDirection = (heading) => {
-    if (heading >= 0 && heading < 45) return 'North';
-    if (heading >= 45 && heading < 135) return 'East';
-    if (heading >= 135 && heading < 225) return 'South';
-    if (heading >= 225 && heading < 315) return 'West';
-    return 'North';
+    if (heading >= 337.5 || heading < 22.5) {
+      return 'N';
+    } else if (heading >= 22.5 && heading < 67.5) {
+      return 'NE';
+    } else if (heading >= 67.5 && heading < 112.5) {
+      return 'E';
+    } else if (heading >= 112.5 && heading < 157.5) {
+      return 'SE';
+    } else if (heading >= 157.5 && heading < 202.5) {
+      return 'S';
+    } else if (heading >= 202.5 && heading < 247.5) {
+      return 'SW';
+    } else if (heading >= 247.5 && heading < 292.5) {
+      return 'W';
+    } else if (heading >= 292.5 && heading < 337.5) {
+      return 'NW';
+    }
+  };
+
+  // Function to get the facing direction
+  const getFacingDirection = (heading) => {
+    if (heading >= 337.5 || heading < 22.5) {
+      return 'S';
+    } else if (heading >= 22.5 && heading < 67.5) {
+      return 'SW';
+    } else if (heading >= 67.5 && heading < 112.5) {
+      return 'W';
+    } else if (heading >= 112.5 && heading < 157.5) {
+      return 'NW';
+    } else if (heading >= 157.5 && heading < 202.5) {
+      return 'N';
+    } else if (heading >= 202.5 && heading < 247.5) {
+      return 'NE';
+    } else if (heading >= 247.5 && heading < 292.5) {
+      return 'E';
+    } else if (heading >= 292.5 && heading < 337.5) {
+      return 'SE';
+    }
+  };
+
+  // Function to handle autocomplete of address input value through Google API
+  const handleAutocomplete = () => {
+    const addressInput = document.getElementById('address');
+    const autocomplete = new google.maps.places.Autocomplete(addressInput);
+    autocomplete.setFields(['address_components', 'geometry', 'icon', 'name']);
   };
 
   return (
     <>
-      <LoadScript googleMapsApiKey={apiKey}>
+      <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
         <h1 id="title">House Compass</h1>
-        <p>House Compass is a web application that helps you find the direction a home is facing.</p>
-        <input type="text" id="address" placeholder="Enter an address" />
+        <p>Search and find what direction any home faces</p>
+        <input type="text" id="address" placeholder="Enter an address" onFocus={handleAutocomplete} />
         <button id="submit" onClick={handleButtonClick}>
           Submit/Reset
         </button>

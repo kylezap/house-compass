@@ -1,75 +1,15 @@
-// import React, { useEffect, useState } from 'react';
-// import { Loader } from "@googlemaps/js-api-loader"
-
-
-// const MapComponent = ({ address, onHeadingChange }) => {
-//   const [location, setLocation] = useState({ lat: 35.11464, lng: -80.81398 }); // Default location
-//   const [panorama, setPanorama] = useState(null);
-
-//   useEffect(() => {
-//     let map;
-  
-//     const loadMap = async () => {
-//       const { Map } = await google.maps.importLibrary('maps');
-  
-//       const location = await getGeocodeLocation(address);
-//       setLocation(location);
-  
-//       const panorama = initializePanorama(location);
-//       setPanorama(panorama);
-  
-//       const sv = new google.maps.StreetViewService();
-//       sv.getPanorama({ location: location, radius: 50 }).then(processSVData);
-//     };
-  
-//     const getGeocodeLocation = (address) => {
-//       return new Promise((resolve, reject) => {
-//         const geocoder = new google.maps.Geocoder();
-//         geocoder.geocode({ address }, (results, status) => {
-//           if (status === 'OK') {
-//             resolve(results[0].geometry.location);
-//           } else {
-//             reject(status);
-//           }
-//         });
-//       }).catch((error) => {
-//         console.error('Geocode failed due to: ' + error);
-//         return { lat: 35.11464, lng: -80.81398 }; // Default location if geocoding fails
-//       });
-//     };
-  
-//     const initializePanorama = (location) => {
-//       return new google.maps.StreetViewPanorama(
-//         document.getElementById('pano')
-//       );
-//     };
-  
-//     const processSVData = ({ data }) => {
-//       console.log(data);
-//       const heading = data.links[0].heading;
-//       ;
-//     };
-  
-//     loadMap();
-//   }, [address]);
-  
-
-//   return <div id="pano" style={{ width: '100%', height: '400px' }}></div>;
-// };
-
-// export default MapComponent;
-
 import React, { useEffect, useState } from 'react';
+import '../App.css';
 
 
 const MapComponent = ({ address, onHeadingChange }) => {
   const [location, setLocation] = useState(null);
   const [panorama, setPanorama] = useState(null);
+  const [heading, setHeading] = useState(null);
 
   useEffect(() => {
     const loadMap = async () => {
       try {
-        const { Map } = await google.maps.importLibrary('maps');
         const sv = new google.maps.StreetViewService();
         const geocoder = new google.maps.Geocoder();
 
@@ -85,7 +25,7 @@ const MapComponent = ({ address, onHeadingChange }) => {
 
         const location = await geocodePromise.catch((error) => {
           console.error('Geocode failed due to: ' + error);
-          return { lat: 35.11464, lng: -80.81398 }; // Default location if geocoding fails
+          return { lat: 35.11464, lng: -80.81398 };
         });
 
         setLocation(location);
@@ -94,13 +34,12 @@ const MapComponent = ({ address, onHeadingChange }) => {
           document.getElementById('pano'),
           {
             position: location,
-            pov: { heading: 165, pitch: 0 },
+            pov: { heading: heading, pitch: 0 },
             visible: true,
           }
         );
 
         sv.getPanorama({ location: location, radius: 50 }).then(processSVData);
-
         setPanorama(panorama);
       } catch (error) {
         console.error('Error loading map: ', error);
@@ -109,7 +48,9 @@ const MapComponent = ({ address, onHeadingChange }) => {
 
     const processSVData = ({ data }) => {
       if (data) {
+        console.log(data);
         const heading = data.links[0]?.heading;
+        setHeading(heading);
         if (heading !== undefined) {
           onHeadingChange(heading);
         } else {
@@ -122,6 +63,10 @@ const MapComponent = ({ address, onHeadingChange }) => {
 
     loadMap();
   }, [address, onHeadingChange]);
+  
+  console.log('This is the location:'+location);
+  console.log('This is the heading:'+heading);
+  console.log('This is the panorama:' +panorama);
 
   return <div id="pano" style={{ height: '500px', width: '100%' }} />;
 };
