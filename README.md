@@ -1,4 +1,14 @@
-# House Compass
+# House Compass 
+
+![screenshot](./public/screenshot.png)
+
+
+## Live Demo 
+
+[House Compass](https://main.d3ha0g41jft06p.amplifyapp.com/)
+
+
+## Summary
 
 This project lets users find compass directions for a home including which direction a home faces and which direction is headed when looking at the home from the street. Practicing real estate brokerage, it's a very common concern among certain groups of people what direction the front door faces. I built this app for this purpose. 
 
@@ -31,4 +41,4 @@ It's not perfect and for many scenarios it can break. One address returned the a
 
 Additionally I'd like to make the directions dynamic. When a user changes the directions on the drag and drop streetview, the compass directions will update too.
 
-## 
+Thanks for your interest! If you have any questions or want to chat, I'm always open to connect. 
