@@ -45,12 +45,8 @@
   height: 400px;
 }
 
-#title {
-  font-size: 3em
-}
-
 h2 {
-  font-size: 2em;
+  font-size: 4em;
 }
 
 #map {
@@ -66,7 +62,7 @@ h2 {
 }
 
 #submit:hover {
-  background-color: #f8f8f8;
+  background-color: #7888eb;
 }
 
 #submit:active {
